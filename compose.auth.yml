@@ -17,9 +17,14 @@ services:
       - AUTH_SCOPE=openid email profile offline_access
       - AUTH_PROVIDER_ID=keycloak
       - AUTH_PROVIDER_NAME=Keycloak
+      - AUTH_TRUST_HOST=true
 
     networks:
       - kc-network
+    depends_on:
+      keycloak:
+        condition: service_healthy
+        restart: true
 
   api:
     environment:
@@ -38,22 +43,32 @@ services:
 
     networks:
       - kc-network
+    depends_on:
+      keycloak:
+        condition: service_healthy
+        restart: true
 
   db:
     networks:
       - kc-network
 
+  worker:
+    env_file:
+      - path: ./.env.worker.local
+        required: false
+
   keycloak:
     container_name: neosync-auth-keycloak
-    image: quay.io/keycloak/keycloak
+    image: quay.io/keycloak/keycloak:26.8.2
     ports:
       - 8083:8080
     command: start-dev --import-realm
     environment:
-      - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=change_me
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=change_me
 
-      - KC_HOSTNAME_URL=http://localhost:8083
+      - KC_HOSTNAME=http://localhost:8083
+      - KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true
 
       - KC_DB=postgres
       - KC_DB_URL_HOST=db
@@ -64,6 +79,12 @@ services:
       - KC_DB_SCHEMA=keycloak
     volumes:
       - ./keycloak/imports:/opt/keycloak/data/import
+    healthcheck:
+      test: ['CMD-SHELL', 'exec 3<>/dev/tcp/127.0.0.1/8080']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
     networks:
       - kc-network
     depends_on:
