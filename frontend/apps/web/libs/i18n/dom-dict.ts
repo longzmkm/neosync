@@ -916,6 +916,8 @@ export const domTranslations: Record<string, string> = {
   'Sync and anonymize data between a source and destination.':
     '在源和目标之间同步并匿名化数据。',
   'Data Generation': '数据生成',
+  'Generate synthetic data from scratch for a chosen destination.':
+    '为指定目标从头生成合成数据。',
   'Generate synthetic data from scratch with AI.': '使用 AI 从头生成合成数据。',
   'Generate synthetic data from using Neosync Transformers.':
     '使用 Neosync 转换器生成合成数据。',
@@ -935,4 +937,200 @@ export const domTranslations: Record<string, string> = {
   'Table Page Sync Timeout': '表分页同步超时',
   Trial: '试用',
   Team: '团队',
+  'A URL must be provided.': '必须提供 URL。',
+  'A column is required': '请选择列',
+  'A database port is required.': '请填写数据库端口。',
+  'A default transformer config must be provided for the boolean data type':
+    '布尔类型必须提供默认转换器配置',
+  'A default transformer config must be provided for the byte data type':
+    '字节类型必须提供默认转换器配置',
+  'A default transformer config must be provided for the number data type':
+    '数字类型必须提供默认转换器配置',
+  'A default transformer config must be provided for the string data type':
+    '字符串类型必须提供默认转换器配置',
+  'A non-empty domain is required in the excluded domains property':
+    '排除域名中不能为空',
+  'A schema is required': '请选择 schema',
+  'A table is required': '请选择表',
+  'A valid transformer configuration must be provided.':
+    '必须提供有效的转换器配置。',
+  'AI Generate form values are required.': 'AI 生成表单不能为空。',
+  'AI Generate schema values are required.': 'AI 生成表结构不能为空。',
+  'API Key Name must be at least 3 characters long and can only include lowercase letters, numbers, and hyphens.':
+    'API 密钥名称至少 3 个字符，且只能包含小写字母、数字和连字符。',
+  'Account Name must be of length 3-30 and only include lowercased letters, numbers, and/or hyphens.':
+    '账号名称长度需为 3-30，且只能包含小写字母、数字和/或连字符。',
+  'Account is not valid.': '账号无效。',
+  'An API Key must be provided.': '必须提供 API 密钥。',
+  'At least one destination Connection is required': '至少需要一个目标连接',
+  'Both timeouts cannot be 0': '两个超时不能同时为 0',
+  'Columns are required': '请选择列',
+  'Connection Name can only include lowercase letters, numbers, and hyphens.':
+    '连接名称只能包含小写字母、数字和连字符。',
+  'Connection Name is a required field.': '连接名称为必填项。',
+  'Connection Name must be at least 3 characters long and can only include lowercase letters, numbers, and hyphens.':
+    '连接名称至少 3 个字符，且只能包含小写字母、数字和连字符。',
+  'Connection is required': '请选择连接',
+  'Connection is required.': '请选择连接。',
+  'Connections must be unique and the same Connection type':
+    '连接必须唯一且类型一致',
+  'Description is a required field.': '描述为必填项。',
+  'Destination Connection is required.': '请选择目标连接。',
+  'Destination Options are required.': '目标选项不能为空。',
+  'Destination and destination option form values are required.':
+    '目标和目标选项表单不能为空。',
+  'Destination connections must be unique from one another':
+    '目标连接之间不能重复',
+  'Destination form values are required.': '目标表单不能为空。',
+  'Destination is required': '请选择目标',
+  'Destination must be different from source.': '目标不能与数据源相同。',
+  'Destination option form values are required.': '目标选项表单不能为空。',
+  'Destination options are required': '目标选项不能为空',
+  'Destination table is required': '请选择目标表',
+  'Environment variable must start with USER_DEFINED_':
+    '环境变量必须以 USER_DEFINED_ 开头',
+  'Generate form values are required.': '生成表单不能为空。',
+  'Generate table form values are required.': '生成表表单不能为空。',
+  'Javascript is not valid': 'JavaScript 无效',
+  'Job Name can only include lowercase letters, numbers, and hyphens':
+    '作业名称只能包含小写字母、数字和连字符',
+  'Job form values are required.': '作业表单不能为空。',
+  'Job mapping values are required.': '作业映射不能为空。',
+  'Mappings are required.': '映射不能为空。',
+  'Max must be greater than or equal to Min': '最大值必须大于等于最小值',
+  'Min must be less than or equal to Max': '最小值必须小于等于最大值',
+  'Must be a valid duration': '必须是有效的时间长度',
+  'Must be at least 1': '至少为 1',
+  'Must be greater than or equal to 0': '必须大于等于 0',
+  'Must be greater than or equal to 1': '必须大于等于 1',
+  'Must be less than or equal to 200': '必须小于等于 200',
+  'Must have at least one category': '至少需要一个分类',
+  'Must not go above 1': '不能大于 1',
+  'Must not go below 0': '不能小于 0',
+  'Must provide a DynamoDB unmapped transform config':
+    '必须提供 DynamoDB 未映射转换配置',
+  'Must provide a batch size when generating rows': '生成行时必须提供批大小',
+  'Must provide a maximum number for generate string config.':
+    '生成字符串配置必须提供最大值。',
+  'Must provide a minimum number for generate string config.':
+    '生成字符串配置必须提供最小值。',
+  'Must provide a number of rows to generate': '必须提供要生成的行数',
+  'Must provide a valid schema': '必须提供有效的 schema',
+  'Must provide a valid table': '必须提供有效的表',
+  'Name cannot be less than 3 characters.': '名称不能少于 3 个字符。',
+  'Name is a required field': '名称为必填项',
+  'Name is a required field.': '名称为必填项。',
+  'Name must be less than or equal to 100 characters.':
+    '名称必须小于等于 100 个字符。',
+  'Only one conflict strategy can be enabled at a time':
+    '同一时间只能启用一种冲突策略',
+  'PII Detection form values are required.': 'PII 检测表单不能为空。',
+  'Schema mappings are required.': 'schema 映射不能为空。',
+  'Schems Form Destination options are required': 'schema 表单目标选项不能为空',
+  'Source Connection is required.': '请选择数据源连接。',
+  'Source Options is required': '数据源选项不能为空',
+  'Source is not a valid connection': '数据源不是有效连接',
+  'Source is required': '请选择数据源',
+  'Source must be different from destination': '数据源不能与目标相同',
+  'Source table is required': '请选择源表',
+  'Subset is required.': '子集不能为空。',
+  'THe number of rows to generate is required': '必须提供要生成的行数',
+  'Table Mappings are required.': '表映射不能为空。',
+  'The AWS form fields are required.': 'AWS 表单字段为必填。',
+  'The Batch Size must be less than or equal to 100.':
+    '批大小必须小于等于 100。',
+  'The Bucket is required.': '请填写存储桶。',
+  'The Bucket name is required.': '请填写存储桶名称。',
+  'The Connection details are required.': '请填写连接详情。',
+  'The Connection name must be less than or equal to 100 characters.':
+    '连接名称必须小于等于 100 个字符。',
+  'The Connection name must be longer than 3 characters.':
+    '连接名称必须多于 3 个字符。',
+  'The Connection url is required': '请填写连接 URL',
+  'The Description is required.': '请填写描述。',
+  'The Destinatino form values are required.': '目标表单不能为空。',
+  'The Destination form values are required.': '目标表单不能为空。',
+  'The Email is required': '请填写邮箱',
+  'The Expiration is a required field.': '过期时间为必填项。',
+  'The Expiration is required.': '请填写过期时间。',
+  'The GCP form fields are required.': 'GCP 表单字段为必填。',
+  'The JavaScript code is invalid.': 'JavaScript 代码无效。',
+  'The Job Name must be at least 3 characters': '作业名称至少 3 个字符',
+  'The Job Run Timeout cannot be less than 0 minutes':
+    '运行超时不能小于 0 分钟',
+  'The Job name must be less than or equal to 100 characters':
+    '作业名称必须小于等于 100 个字符',
+  'The Max Idle Connection Limit cannot be greater than 1000.':
+    '最大空闲连接数不能大于 1000。',
+  'The Max Idle Connection Limit cannot be less than -1':
+    '最大空闲连接数不能小于 -1',
+  'The Max Open Connection Limit cannot be less than -1':
+    '最大打开连接数不能小于 -1',
+  'The Max Open Connection limit must be less than or equal to 1000.':
+    '最大打开连接数必须小于等于 1000。',
+  'The Max Table Timeout (including Retries) cannot be less than 0 minutes':
+    '表同步最大超时（含重试）不能小于 0 分钟',
+  'The Maximum Retry Attempts cannot be less than 0': '最大重试次数不能小于 0',
+  'The Maximum cannot be greater than 9007199254740991 2^53 − 1':
+    '最大值不能大于 9007199254740991（2^53 − 1）',
+  'The Minimum cannot be less than −9007199254740991 (−(2^53 − 1))':
+    '最小值不能小于 −9007199254740991（−(2^53 − 1)）',
+  'The MongoDB form fields are required.': 'MongoDB 表单字段为必填。',
+  'The Name is required.': '请填写名称。',
+  'The Name must be at least 3 characters.': '名称至少 3 个字符。',
+  'The Name must be less than or equal to 100 characters.':
+    '名称必须小于等于 100 个字符。',
+  'The Namespace is required.': '请填写命名空间。',
+  'The Port is required when there is a Host.': '填写主机时必须填写端口。',
+  'The Port must be greater than or equal to 0.': '端口必须大于等于 0。',
+  'The Role is required': '请填写角色',
+  'The Schedule must be a valid Cron string': '调度必须是有效的 Cron 表达式',
+  'The Sync Job Name is required.': '同步作业名称为必填项。',
+  'The Table Sync cannot be less than 0 minutes': '表同步时间不能小于 0 分钟',
+  'The Temporal URL is required': '请填写 Temporal 地址',
+  'The Transformer Name is required.': '请填写转换器名称。',
+  'The Transformer Name must be at least 3 characters.':
+    '转换器名称至少 3 个字符。',
+  'The Transformer Name must be less than or equal to 100 characters.':
+    '转换器名称必须小于等于 100 个字符。',
+  'The Transformer case is required.': '请选择转换器类型。',
+  'The Transformer config is required.': '转换器配置为必填项。',
+  'The Transformer value is required.': '转换器值为必填项。',
+  'The Url is required.': '请填写 URL。',
+  'The User field is required when there is a Host.':
+    '填写主机时必须填写用户。',
+  'The database name is required': '请填写数据库名',
+  'The database name is required.': '请填写数据库名。',
+  'The database password is required': '请填写数据库密码',
+  'The database password is required.': '请填写数据库密码。',
+  'The database port is required': '请填写数据库端口',
+  'The database protocol is required.': '请选择数据库协议。',
+  'The database user is required': '请填写数据库用户',
+  'The database user is required.': '请填写数据库用户。',
+  'The environment variable is required': '请填写环境变量',
+  'The host name is required.': '请填写主机名。',
+  'The number of rows must be less than or equal to 1000':
+    '行数必须小于等于 1000',
+  'The number of rows must be less than or equal to 1000.':
+    '行数必须小于等于 1000。',
+  'The number of rows to generate must be greater than or equal to 1.':
+    '生成行数必须大于等于 1。',
+  'This Connection Name is already taken.': '该连接名称已被占用。',
+  'This Job Name is already taken.': '该作业名称已被占用。',
+  'This Transformer Name is already taken.': '该转换器名称已被占用。',
+  'This field is required': '此项为必填项',
+  'This field is required.': '此项为必填项。',
+  'This name is already taken.': '该名称已被占用。',
+  'Transformer Name must be at least 3 characters long and can only include lowercase letters, numbers, and hyphens.':
+    '转换器名称至少 3 个字符，且只能包含小写字母、数字和连字符。',
+  'Transformer name Name can only include lowercase letters, numbers, and hyphens.':
+    '转换器名称只能包含小写字母、数字和连字符。',
+  'Transformer name is too short. Must be at least 3 characters long.':
+    '转换器名称太短，至少需要 3 个字符。',
+  'Unable to verify Name. Account is not valid.': '无法校验名称，账号无效。',
+  'Value must be bigint or convertable to bigint':
+    '值必须是 bigint 或可转换为 bigint',
+  'Virtual Foreign Key Constraint values are required.':
+    '虚拟外键约束值为必填项。',
+  'Virtural Foreign Key mappings are required.': '虚拟外键映射不能为空。',
 };
