@@ -676,7 +676,7 @@ column_defaults AS (
                 -1
         END AS numeric_scale,
         a.attnum AS ordinal_position,
-        a.attgenerated::text as generated_type,
+        COALESCE(to_jsonb(a)->>'attgenerated', '')::text as generated_type,
         a.attidentity::text as identity_generation,
         c.oid AS table_oid
     FROM
@@ -879,7 +879,7 @@ column_defaults AS (
                 -1
         END AS numeric_scale,
         a.attnum AS ordinal_position,
-        a.attgenerated::text as generated_type,
+        COALESCE(to_jsonb(a)->>'attgenerated', '')::text as generated_type,
         a.attidentity::text as identity_generation,
         c.oid AS table_oid
     FROM
@@ -1317,6 +1317,7 @@ GROUP BY
     constraint_def.conname,
     referencing_tbl.relname,
     constraint_def.contype,
+    constraint_def.condeferrable,
     referenced_schema.nspname,
     referenced_tbl.relname,
     ref_columns.foreign_column_names
@@ -1435,6 +1436,7 @@ GROUP BY
     constraint_def.conname,
     referencing_tbl.relname,
     constraint_def.contype,
+    constraint_def.condeferrable,
     referenced_schema.nspname,
     referenced_tbl.relname,
     ref_columns.foreign_column_names
@@ -1572,6 +1574,7 @@ GROUP BY
 	pgcon.oid,
 	pgcon.conname,
 	pgcon.contype,
+	pgcon.condeferrable,
 	pn.nspname,
 	c.relname
 `
@@ -1643,6 +1646,7 @@ GROUP BY
 	pgcon.oid,
 	pgcon.conname,
 	pgcon.contype,
+	pgcon.condeferrable,
 	pn.nspname,
 	c.relname
 `
@@ -1694,6 +1698,20 @@ func (q *Queries) GetNonForeignKeyTableConstraintsBySchemaAndTables(ctx context.
 }
 
 const getPartitionHierarchyByTable = `-- name: GetPartitionHierarchyByTable :many
+WITH RECURSIVE partition_tree AS (
+    SELECT
+        cls.oid AS relid,
+        NULL::oid AS parentrelid
+    FROM pg_catalog.pg_class cls
+    WHERE cls.oid = to_regclass($1::TEXT)
+    UNION ALL
+    SELECT
+        child.oid AS relid,
+        inh.inhparent AS parentrelid
+    FROM pg_catalog.pg_inherits inh
+    JOIN pg_catalog.pg_class child ON child.oid = inh.inhrelid
+    JOIN partition_tree pt ON pt.relid = inh.inhparent
+)
 SELECT
     child_ns.nspname          AS schema_name,
     child_cls.relname         AS table_name,
@@ -1703,7 +1721,7 @@ SELECT
         pg_get_expr(child_cls.relpartbound, child_cls.oid),
         ''
     )::TEXT AS partition_bound
-FROM pg_partition_tree($1::TEXT) AS t
+FROM partition_tree t
 JOIN pg_catalog.pg_class child_cls
     ON child_cls.oid = t.relid
 JOIN pg_catalog.pg_namespace child_ns
