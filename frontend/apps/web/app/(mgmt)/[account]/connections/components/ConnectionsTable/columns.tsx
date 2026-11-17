@@ -6,6 +6,7 @@ import NextLink from 'next/link';
 
 import TruncatedText from '@/components/TruncatedText';
 import { formatDateTime } from '@/util/util';
+import type { Translator } from '@/libs/i18n';
 import { Timestamp, timestampDate } from '@bufbuild/protobuf/wkt';
 import { Connection } from '@neosync/sdk';
 import { getCategory } from '../../util';
@@ -15,15 +16,19 @@ import { DataTableRowActions } from './data-table-row-actions';
 interface GetColumnsProps {
   onConnectionDeleted(id: string): void;
   accountName: string;
+  t: Translator;
 }
 
 export function getColumns(props: GetColumnsProps): ColumnDef<Connection>[] {
-  const { accountName, onConnectionDeleted } = props;
+  const { accountName, onConnectionDeleted, t } = props;
   return [
     {
       accessorKey: 'id',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Connection Id" />
+        <DataTableColumnHeader
+          column={column}
+          title={t('table.connectionId')}
+        />
       ),
       cell: ({ row }) => (
         <div>
@@ -41,7 +46,7 @@ export function getColumns(props: GetColumnsProps): ColumnDef<Connection>[] {
     {
       accessorKey: 'name',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Name" />
+        <DataTableColumnHeader column={column} title={t('table.name')} />
       ),
       cell: ({ row }) => {
         return (
@@ -61,7 +66,7 @@ export function getColumns(props: GetColumnsProps): ColumnDef<Connection>[] {
     {
       accessorKey: 'category',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Category" />
+        <DataTableColumnHeader column={column} title={t('table.category')} />
       ),
       cell: ({ row }) => {
         return (
@@ -79,7 +84,7 @@ export function getColumns(props: GetColumnsProps): ColumnDef<Connection>[] {
     {
       accessorKey: 'createdAt',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Created At" />
+        <DataTableColumnHeader column={column} title={t('table.createdAt')} />
       ),
       cell: ({ row }) => {
         const ts = row.getValue<Timestamp>('createdAt') ?? {
@@ -101,7 +106,7 @@ export function getColumns(props: GetColumnsProps): ColumnDef<Connection>[] {
     {
       accessorKey: 'updatedAt',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Updated At" />
+        <DataTableColumnHeader column={column} title={t('table.updatedAt')} />
       ),
       cell: ({ row }) => {
         const ts = row.getValue<Timestamp>('updatedAt') ?? {
@@ -123,7 +128,7 @@ export function getColumns(props: GetColumnsProps): ColumnDef<Connection>[] {
     {
       id: 'actions',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Actions" />
+        <DataTableColumnHeader column={column} title={t('table.actions')} />
       ),
       cell: ({ row }) => (
         <DataTableRowActions

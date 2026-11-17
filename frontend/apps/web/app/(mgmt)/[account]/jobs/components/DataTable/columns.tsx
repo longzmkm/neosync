@@ -5,30 +5,33 @@ import { ColumnDef } from '@tanstack/react-table';
 import TruncatedText from '@/components/TruncatedText';
 import { Badge } from '@/components/ui/badge';
 import { formatDateTime } from '@/util/util';
+import type { Translator } from '@/libs/i18n';
 import { Timestamp, timestampDate } from '@bufbuild/protobuf/wkt';
 import { JobStatus } from '@neosync/sdk';
 import NextLink from 'next/link';
 import { DataTableColumnHeader } from './data-table-column-header';
 import { DataTableRowActions } from './data-table-row-actions';
 
-const JOB_STATUS = [
-  {
-    value: JobStatus.ENABLED,
-    badge: <Badge className="bg-blue-600">Enabled</Badge>,
-  },
-  {
-    value: JobStatus.DISABLED,
-    badge: <Badge variant="destructive">Error</Badge>,
-  },
-  {
-    value: JobStatus.PAUSED,
-    badge: <Badge className="bg-gray-600">Paused</Badge>,
-  },
-  {
-    value: JobStatus.UNSPECIFIED,
-    badge: <Badge variant="outline">Unknown</Badge>,
-  },
-];
+function getJobStatusBadges(t: Translator) {
+  return [
+    {
+      value: JobStatus.ENABLED,
+      badge: <Badge className="bg-blue-600">{t('jobStatus.enabled')}</Badge>,
+    },
+    {
+      value: JobStatus.DISABLED,
+      badge: <Badge variant="destructive">{t('jobStatus.error')}</Badge>,
+    },
+    {
+      value: JobStatus.PAUSED,
+      badge: <Badge className="bg-gray-600">{t('jobStatus.paused')}</Badge>,
+    },
+    {
+      value: JobStatus.UNSPECIFIED,
+      badge: <Badge variant="outline">{t('jobStatus.unknown')}</Badge>,
+    },
+  ];
+}
 
 interface JobColumn {
   id: string;
@@ -41,18 +44,20 @@ interface JobColumn {
 interface GetJobsProps {
   accountName: string;
   onDeleted(id: string): void;
+  t: Translator;
 }
 
 export function getColumns(props: GetJobsProps): ColumnDef<JobColumn>[] {
-  const { onDeleted, accountName } = props;
+  const { onDeleted, accountName, t } = props;
+  const jobStatuses = getJobStatusBadges(t);
   return [
     {
       accessorKey: 'status',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Status" />
+        <DataTableColumnHeader column={column} title={t('table.status')} />
       ),
       cell: ({ row }) => {
-        const status = JOB_STATUS.find(
+        const status = jobStatuses.find(
           (status) => status.value === row.getValue('status')
         );
 
@@ -69,7 +74,7 @@ export function getColumns(props: GetJobsProps): ColumnDef<JobColumn>[] {
     {
       accessorKey: 'id',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Job Id" />
+        <DataTableColumnHeader column={column} title={t('table.jobId')} />
       ),
       cell: ({ row }) => {
         return (
@@ -89,7 +94,7 @@ export function getColumns(props: GetJobsProps): ColumnDef<JobColumn>[] {
     {
       accessorKey: 'name',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Name" />
+        <DataTableColumnHeader column={column} title={t('table.name')} />
       ),
       cell: ({ row }) => {
         return (
@@ -111,7 +116,7 @@ export function getColumns(props: GetJobsProps): ColumnDef<JobColumn>[] {
     {
       accessorKey: 'type',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Type" />
+        <DataTableColumnHeader column={column} title={t('table.type')} />
       ),
       cell: ({ row }) => {
         return (
@@ -126,7 +131,7 @@ export function getColumns(props: GetJobsProps): ColumnDef<JobColumn>[] {
     {
       accessorKey: 'createdAt',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Created At" />
+        <DataTableColumnHeader column={column} title={t('table.createdAt')} />
       ),
       cell: ({ row }) => {
         const ts = row.getValue<Timestamp>('createdAt') ?? {
@@ -148,7 +153,7 @@ export function getColumns(props: GetJobsProps): ColumnDef<JobColumn>[] {
     {
       accessorKey: 'updatedAt',
       header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Updated At" />
+        <DataTableColumnHeader column={column} title={t('table.updatedAt')} />
       ),
       cell: ({ row }) => {
         const ts = row.getValue<Timestamp>('updatedAt') ?? {

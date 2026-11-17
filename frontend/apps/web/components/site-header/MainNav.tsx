@@ -3,6 +3,7 @@
 import Link from 'next/link';
 
 import { cn } from '@/libs/utils';
+import { useI18n } from '@/components/providers/i18n-provider';
 import { useTheme } from 'next-themes';
 import { usePathname } from 'next/navigation';
 import { useAccount } from '../providers/account-provider';
@@ -15,6 +16,7 @@ export function MainNav({
 }: React.HTMLAttributes<HTMLElement>) {
   const pathname = usePathname();
   const { account } = useAccount();
+  const { t } = useI18n();
   const { resolvedTheme } = useTheme();
   const accountName = account?.name ?? 'personal';
 
@@ -43,7 +45,7 @@ export function MainNav({
             getPathNameHighlight('/job', pathname)
           )}
         >
-          Jobs
+          {t('nav.jobs')}
         </Link>
         <Link
           href={`/${accountName}/runs`}
@@ -52,7 +54,7 @@ export function MainNav({
             getPathNameHighlight('/run', pathname)
           )}
         >
-          Runs
+          {t('nav.runs')}
         </Link>
         <Link
           href={`/${accountName}/transformers`}
@@ -61,7 +63,7 @@ export function MainNav({
             getPathNameHighlight('/transformer', pathname)
           )}
         >
-          Transformers
+          {t('nav.transformers')}
         </Link>
         <Link
           href={`/${accountName}/connections`}
@@ -70,7 +72,7 @@ export function MainNav({
             getPathNameHighlight('connection', pathname)
           )}
         >
-          Connections
+          {t('nav.connections')}
         </Link>
 
         <Link
@@ -80,7 +82,7 @@ export function MainNav({
             getPathNameHighlight('/settings', pathname)
           )}
         >
-          Settings
+          {t('nav.settings')}
         </Link>
       </nav>
     </div>

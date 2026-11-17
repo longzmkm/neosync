@@ -1,29 +1,31 @@
+import type { MessageKey } from '@/libs/i18n';
+
 export function getMobileMainNav(
   accountName: string
-): { title: string; href: string }[] {
+): { titleKey: MessageKey; href: string }[] {
   return [
     // {
     //   title: 'Overview',
     //   href: `/`,
     // },
     {
-      title: 'Jobs',
+      titleKey: 'nav.jobs',
       href: `/${accountName}/jobs`,
     },
     {
-      title: 'Runs',
+      titleKey: 'nav.runs',
       href: `/${accountName}/runs`,
     },
     {
-      title: 'Transformers',
+      titleKey: 'nav.transformers',
       href: `/${accountName}/transformers`,
     },
     {
-      title: 'Connections',
+      titleKey: 'nav.connections',
       href: `/${accountName}/connections`,
     },
     {
-      title: 'Settings',
+      titleKey: 'nav.settings',
       href: `/${accountName}/settings`,
     },
   ];

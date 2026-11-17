@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
 
 import { getMobileMainNav } from '@/app/config/mobile-nav-config';
+import { useI18n } from '@/components/providers/i18n-provider';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -18,6 +19,7 @@ import { getPathNameHighlight } from './util';
 export function MobileNav() {
   const [open, setOpen] = React.useState(false);
   const { account } = useAccount();
+  const { t } = useI18n();
   const pathname = usePathname();
   const { resolvedTheme } = useTheme();
 
@@ -29,7 +31,7 @@ export function MobileNav() {
           className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 lg:hidden"
         >
           <ViewVerticalIcon className="h-5 w-5" />
-          <span className="sr-only">Toggle Menu</span>
+          <span className="sr-only">{t('header.toggleMenu')}</span>
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="pr-0">
@@ -57,7 +59,7 @@ export function MobileNav() {
                       )
                     )}
                   >
-                    {item.title}
+                    {t(item.titleKey)}
                   </MobileLink>
                 )
             )}

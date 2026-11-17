@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { GearIcon } from '@radix-ui/react-icons';
+import { useI18n } from '@/components/providers/i18n-provider';
 import { signOut, useSession } from 'next-auth/react';
 import { usePostHog } from 'posthog-js/react';
 import { ReactElement } from 'react';
@@ -19,6 +20,7 @@ import { toast } from 'sonner';
 export function UserNav(): ReactElement | null {
   const session = useSession();
   const posthog = usePostHog();
+  const { t } = useI18n();
 
   const avatarImageSrc = session.data?.user?.image ?? '';
   const avatarImageAlt = session.data?.user?.name ?? 'unknown';
@@ -59,8 +61,8 @@ export function UserNav(): ReactElement | null {
           </div>
         )}
         <DropdownMenuGroup>
-          <DropdownMenuItem disabled>Profile</DropdownMenuItem>
-          <DropdownMenuItem disabled>Settings</DropdownMenuItem>
+          <DropdownMenuItem disabled>{t('user.profile')}</DropdownMenuItem>
+          <DropdownMenuItem disabled>{t('user.settings')}</DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         {session.status === 'authenticated' && (
@@ -74,11 +76,11 @@ export function UserNav(): ReactElement | null {
                 });
               } catch (err) {
                 console.error(err);
-                toast.error('Unable to sign out of provider session');
+                toast.error(t('user.signOutError'));
               }
             }}
           >
-            Log out
+            {t('user.logout')}
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>
