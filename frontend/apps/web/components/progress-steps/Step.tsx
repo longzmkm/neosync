@@ -8,10 +8,11 @@ interface Props {
   isActive: boolean;
   isLastStep: boolean;
   name: string;
+  label?: string;
 }
 
 export default function Step(props: Props): ReactElement {
-  const { isActive, isCompleted, isLastStep, name } = props;
+  const { isActive, isCompleted, isLastStep, name, label } = props;
 
   return (
     <div className={cn(isLastStep ? 'flex' : 'flex-none')}>
@@ -19,6 +20,7 @@ export default function Step(props: Props): ReactElement {
         isCompleted={isCompleted}
         isLastStep={isLastStep}
         name={name}
+        label={label}
         isActive={isActive}
       />
     </div>
@@ -29,11 +31,12 @@ interface StepCircleProps {
   isCompleted: boolean;
   isLastStep: boolean;
   name: string;
+  label?: string;
   isActive: boolean;
 }
 
 function StepCircle(props: StepCircleProps): ReactElement {
-  const { isCompleted, isLastStep, name, isActive } = props;
+  const { isCompleted, isLastStep, name, label, isActive } = props;
   return (
     <div className="flex flex-row">
       <div className="flex flex-col gap-2 items-center">
@@ -51,7 +54,7 @@ function StepCircle(props: StepCircleProps): ReactElement {
           {isCompleted && <CheckIcon className="text-white dark:text-white" />}
         </div>
         <div className="text-xs w-[50px] justify-center flex">
-          {toTitleCase(name)}
+          {label ?? toTitleCase(name)}
         </div>
       </div>
       {!isLastStep && (

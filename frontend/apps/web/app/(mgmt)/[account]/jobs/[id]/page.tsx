@@ -1,5 +1,6 @@
 'use client';
 import { PageProps } from '@/components/types';
+import { useI18n } from '@/components/providers/i18n-provider';
 
 import {
   Accordion,
@@ -21,6 +22,7 @@ import WorkflowSettingsCard from './components/WorkflowSettingsCard';
 import JobIdSkeletonForm from './JobIdSkeletonForm';
 
 export default function Page(props: PageProps): ReactElement {
+  const { t } = useI18n();
   const params = use(props.params);
   const id = params?.id ?? '';
   const { data, isLoading } = useQuery(
@@ -81,7 +83,7 @@ export default function Page(props: PageProps): ReactElement {
           <AccordionItem value="advanced-settings">
             <AccordionTrigger className="-ml-2">
               <div className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-lg">
-                Advanced Settings
+                {t('newJob.advancedSettings')}
               </div>
             </AccordionTrigger>
             <AccordionContent>

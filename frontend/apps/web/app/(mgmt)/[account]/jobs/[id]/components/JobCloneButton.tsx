@@ -1,6 +1,7 @@
 'use client';
 import ButtonText from '@/components/ButtonText';
 import { useAccount } from '@/components/providers/account-provider';
+import { useI18n } from '@/components/providers/i18n-provider';
 import { Button } from '@/components/ui/button';
 import { Job, UserAccount } from '@neosync/sdk';
 import { nanoid } from 'nanoid';
@@ -18,6 +19,7 @@ export default function JobCloneButton(props: Props): ReactElement {
   const { job } = props;
   const { account } = useAccount();
   const router = useRouter();
+  const { t } = useI18n();
 
   function onCloneClick(): void {
     if (!account) {
@@ -30,7 +32,7 @@ export default function JobCloneButton(props: Props): ReactElement {
 
   return (
     <Button variant="outline" onClick={onCloneClick}>
-      <ButtonText text="Clone Job" leftIcon={<GrClone />} />
+      <ButtonText text={t('job.clone')} leftIcon={<GrClone />} />
     </Button>
   );
 }

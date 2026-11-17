@@ -2,6 +2,7 @@
 import OverviewContainer from '@/components/containers/OverviewContainer';
 import PageHeader from '@/components/headers/PageHeader';
 import { useAccount } from '@/components/providers/account-provider';
+import { useI18n } from '@/components/providers/i18n-provider';
 import { PageProps } from '@/components/types';
 import { Button } from '@/components/ui/button';
 import {
@@ -48,6 +49,7 @@ export default function Page(props: PageProps): ReactElement {
   const searchParams = use(props.searchParams);
   const router = useRouter();
   const { account } = useAccount();
+  const { t } = useI18n();
   useEffect(() => {
     if (!searchParams?.sessionId) {
       router.push(`/${account?.name}/new/job`);
@@ -128,7 +130,7 @@ export default function Page(props: PageProps): ReactElement {
       <OverviewContainer
         Header={
           <PageHeader
-            header="Define"
+            header={t('newJob.define')}
             progressSteps={
               <JobsProgressSteps
                 steps={getJobProgressSteps(newJobType)}
@@ -148,8 +150,8 @@ export default function Page(props: PageProps): ReactElement {
             name="jobName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormDescription>The unique name of the job.</FormDescription>
+                <FormLabel>{t('newJob.name')}</FormLabel>
+                <FormDescription>{t('newJob.nameDesc')}</FormDescription>
                 <FormControl>
                   <Input placeholder="prod-to-stage" {...field} />
                 </FormControl>
@@ -163,7 +165,7 @@ export default function Page(props: PageProps): ReactElement {
             render={({ field }) => (
               <FormItem>
                 <div className="flex flex-row items-center gap-2">
-                  <FormLabel>Schedule</FormLabel>
+                  <FormLabel>{t('newJob.schedule')}</FormLabel>
                   <Switch
                     checked={isScheduleEnabled}
                     onCheckedChange={(isChecked) => {
@@ -176,10 +178,7 @@ export default function Page(props: PageProps): ReactElement {
                     }}
                   />
                 </div>
-                <FormDescription>
-                  Define a cron schedule to run this job. If disabled, the job
-                  will be paused and a default cron will be set
-                </FormDescription>
+                <FormDescription>{t('newJob.scheduleDesc')}</FormDescription>
                 <FormControl>
                   <Input
                     placeholder={DEFAULT_CRON_STRING}
@@ -196,10 +195,9 @@ export default function Page(props: PageProps): ReactElement {
               name="initiateJobRun"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Initiate Job Run</FormLabel>
+                  <FormLabel>{t('newJob.initiateRun')}</FormLabel>
                   <FormDescription>
-                    Initiates a single job run immediately after the job is
-                    created.
+                    {t('newJob.initiateRunDesc')}
                   </FormDescription>
                   <FormControl>
                     <ToggleGroup
@@ -210,8 +208,12 @@ export default function Page(props: PageProps): ReactElement {
                       }
                       value={field.value ? 'true' : 'false'}
                     >
-                      <ToggleGroupItem value="false">No</ToggleGroupItem>
-                      <ToggleGroupItem value="true">Yes</ToggleGroupItem>
+                      <ToggleGroupItem value="false">
+                        {t('common.no')}
+                      </ToggleGroupItem>
+                      <ToggleGroupItem value="true">
+                        {t('common.yes')}
+                      </ToggleGroupItem>
                     </ToggleGroup>
                   </FormControl>
                   <FormMessage />
@@ -223,7 +225,7 @@ export default function Page(props: PageProps): ReactElement {
             <AccordionItem value="settings">
               <AccordionTrigger className="-ml-2">
                 <div className="hover:bg-gray-100 dark:hover:bg-gray-800 p-2 rounded-lg">
-                  Advanced Settings
+                  {t('newJob.advancedSettings')}
                 </div>
               </AccordionTrigger>
               <AccordionContent>
@@ -234,11 +236,9 @@ export default function Page(props: PageProps): ReactElement {
                     name="workflowSettings.runTimeout"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Job Run Timeout</FormLabel>
+                        <FormLabel>{t('newJob.runTimeout')}</FormLabel>
                         <FormDescription>
-                          The maximum length of time (in minutes) that a single
-                          job run is allowed to span before it times out.{' '}
-                          <code>0</code> means no overall timeout.
+                          {t('newJob.runTimeoutDesc')}
                         </FormDescription>
                         <FormControl>
                           <Input

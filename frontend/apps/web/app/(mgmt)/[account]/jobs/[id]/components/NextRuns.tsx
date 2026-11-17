@@ -12,6 +12,7 @@ import {
 import { formatDateTime } from '@/util/util';
 import { timestampDate } from '@bufbuild/protobuf/wkt';
 import { useQuery } from '@connectrpc/connect-query';
+import { useI18n } from '@/components/providers/i18n-provider';
 import { JobService, JobStatus } from '@neosync/sdk';
 import { ReactElement } from 'react';
 
@@ -21,6 +22,7 @@ interface Props {
 }
 
 export default function JobNextRuns({ jobId, status }: Props): ReactElement {
+  const { t } = useI18n();
   const { data, isLoading, error } = useQuery(
     JobService.method.getJobNextRuns,
     { jobId },
@@ -35,14 +37,14 @@ export default function JobNextRuns({ jobId, status }: Props): ReactElement {
     <div>
       {!data?.nextRuns || error ? (
         <Alert variant="destructive">
-          <AlertTitle>{`Error: Unable to retrieve recent runs`}</AlertTitle>
+          <AlertTitle>{t('job.nextRunsError')}</AlertTitle>
         </Alert>
       ) : (
         <div>
           <Table>
             <TableHeader className="bg-gray-100 dark:bg-gray-800">
               <TableRow>
-                <TableHead className="pl-4">Upcoming Runs</TableHead>
+                <TableHead className="pl-4">{t('job.upcomingRuns')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -51,7 +53,7 @@ export default function JobNextRuns({ jobId, status }: Props): ReactElement {
                 <TableRow className="hover:bg-background">
                   <TableCell>
                     <span className="font-medium justify-center flex pt-20">
-                      No upcoming runs
+                      {t('job.noUpcomingRuns')}
                     </span>
                   </TableCell>
                 </TableRow>

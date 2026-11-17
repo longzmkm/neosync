@@ -18,6 +18,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { getErrorMessage } from '@/util/util';
 import { useMutation } from '@connectrpc/connect-query';
+import { useI18n } from '@/components/providers/i18n-provider';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Job, JobService } from '@neosync/sdk';
 import cron from 'cron-validate';
@@ -57,6 +58,7 @@ interface Props {
 }
 
 export default function JobScheduleCard({ job, mutate }: Props): ReactElement {
+  const { t } = useI18n();
   const form = useForm({
     mode: 'onChange',
     resolver: yupResolver<ScheduleFormValues>(SCHEDULE_FORM_SCHEMA),
@@ -72,13 +74,13 @@ export default function JobScheduleCard({ job, mutate }: Props): ReactElement {
         id: job.id,
         cronSchedule: values.cronSchedule,
       });
-      toast.success('Successfully updated job schedule!');
+      toast.success(t('job.scheduleUpdated'));
       if (resp.job) {
         mutate(resp.job);
       }
     } catch (err) {
       console.error(err);
-      toast.error('Unable to update job schedule', {
+      toast.error(t('job.scheduleUpdateFailed'), {
         description: getErrorMessage(err),
       });
     }
@@ -86,13 +88,13 @@ export default function JobScheduleCard({ job, mutate }: Props): ReactElement {
 
   const msg =
     !form.getValues().cronSchedule || form.getValues().cronSchedule === ''
-      ? 'Not currently scheduled'
+      ? t('job.notScheduled')
       : '';
 
   return (
     <Card className="overflow-hidden">
       <CardHeader>
-        <CardTitle>Schedule</CardTitle>
+        <CardTitle>{t('newJob.schedule')}</CardTitle>
       </CardHeader>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -102,12 +104,10 @@ export default function JobScheduleCard({ job, mutate }: Props): ReactElement {
               name="cronSchedule"
               render={({ field }) => (
                 <FormItem>
-                  <FormDescription>
-                    The schedule to run the job against if not a oneoff.
-                  </FormDescription>
+                  <FormDescription>{t('job.scheduleCardDesc')}</FormDescription>
                   <FormControl>
                     <Input
-                      placeholder="Cron Schedule"
+                      placeholder={t('job.cronPlaceholder')}
                       value={field.value || ''}
                       onChange={field.onChange}
                     />
@@ -121,7 +121,7 @@ export default function JobScheduleCard({ job, mutate }: Props): ReactElement {
             <div className="flex flex-row items-center justify-between w-full">
               <p className="text-muted-foreground text-sm">{msg}</p>
               <Button type="submit" disabled={!form.formState.isDirty}>
-                Save
+                {t('common.save')}
               </Button>
             </div>
           </CardFooter>

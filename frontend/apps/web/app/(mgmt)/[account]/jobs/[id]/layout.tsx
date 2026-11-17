@@ -7,10 +7,12 @@ import OverviewContainer from '@/components/containers/OverviewContainer';
 import PageHeader from '@/components/headers/PageHeader';
 import { isJobSubsettable } from '@/components/jobs/subsets/utils';
 import { useAccount } from '@/components/providers/account-provider';
+import { useI18n } from '@/components/providers/i18n-provider';
 import { LayoutProps } from '@/components/types';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { useGetSystemAppConfig } from '@/libs/hooks/useGetSystemAppConfig';
+import type { MessageKey } from '@/libs/i18n';
 import { getErrorMessage } from '@/util/util';
 import { useMutation, useQuery } from '@connectrpc/connect-query';
 import {
@@ -36,6 +38,7 @@ export default function JobIdLayout(props: LayoutProps) {
   const id = params?.id ?? '';
   const router = useRouter();
   const { account } = useAccount();
+  const { t } = useI18n();
   const { data, isLoading, isPending } = useQuery(
     JobService.method.getJob,
     { id },
@@ -65,14 +68,14 @@ export default function JobIdLayout(props: LayoutProps) {
   async function onTriggerJobRun(): Promise<void> {
     try {
       await triggerJobRun({ jobId: id });
-      toast.success('Job run triggered successfully!');
+      toast.success(t('job.runTriggered'));
       setTimeout(() => {
         mutateRecentRuns();
         mutateJobRunsByJob();
       }, 4000); // delay briefly as there can sometimes be a trigger delay in temporal
     } catch (err) {
       console.error(err);
-      toast.error('Uanble to trigger job run', {
+      toast.error(t('job.runTriggerFailed'), {
         description: getErrorMessage(err),
       });
     }
@@ -84,11 +87,11 @@ export default function JobIdLayout(props: LayoutProps) {
     }
     try {
       await removeJob({ id });
-      toast.success('Job removed successfully!');
+      toast.success(t('job.removed'));
       router.push(`/${account?.name}/jobs`);
     } catch (err) {
       console.error(err);
-      toast.error('Unable to remove job', {
+      toast.error(t('job.removeFailed'), {
         description: getErrorMessage(err),
       });
     }
@@ -112,7 +115,7 @@ export default function JobIdLayout(props: LayoutProps) {
     return (
       <div className="mt-8">
         <Alert variant="destructive">
-          <AlertTitle>{`Error: Unable to retrieve job`}</AlertTitle>
+          <AlertTitle>{t('job.retrieveError')}</AlertTitle>
         </Alert>
       </div>
     );
@@ -132,10 +135,10 @@ export default function JobIdLayout(props: LayoutProps) {
                 <ResourceId
                   labelText={data?.job?.id ?? ''}
                   copyText={data?.job?.id ?? ''}
-                  onHoverText="Copy the Job ID"
+                  onHoverText={t('job.copyId')}
                 />
               }
-              leftBadgeValue={badgeValue}
+              leftBadgeValue={t(jobTypeLabelKeys[badgeValue])}
               extraHeading={
                 <div className="md:flex grid grid-cols-2 md:flex-row gap-4">
                   <JobCloneButton job={data.job} />
@@ -144,12 +147,12 @@ export default function JobIdLayout(props: LayoutProps) {
                       <Button variant="destructive">
                         <ButtonText
                           leftIcon={<TrashIcon />}
-                          text="Delete Job"
+                          text={t('job.delete')}
                         />
                       </Button>
                     }
-                    headerText="Are you sure you want to delete this job?"
-                    description="Deleting this job will also delete all job runs."
+                    headerText={t('job.deleteConfirm')}
+                    description={t('job.deleteDesc')}
                     onConfirm={async () => onDelete()}
                   />
                   <JobPauseButton
@@ -160,7 +163,7 @@ export default function JobIdLayout(props: LayoutProps) {
                   <Button onClick={() => onTriggerJobRun()}>
                     <ButtonText
                       leftIcon={<LightningBoltIcon />}
-                      text="Trigger Run"
+                      text={t('job.triggerRun')}
                     />
                   </Button>
                 </div>
@@ -201,17 +204,28 @@ function getLabeledJobType(
 
 const getBadgeText = getLabeledJobType;
 
+const jobTypeLabelKeys: Record<
+  'Sync Job' | 'Generate Job' | 'AI Generate Job' | 'PII Detect Job',
+  MessageKey
+> = {
+  'Sync Job': 'jobType.syncJob',
+  'Generate Job': 'jobType.generateJob',
+  'AI Generate Job': 'jobType.aiGenerateJob',
+  'PII Detect Job': 'jobType.piiDetectJob',
+};
+
 interface SidebarNav {
   title: string;
   href: string;
 }
 function useGetSidebarNavItems(job?: Job): SidebarNav[] {
   const { account } = useAccount();
+  const { t } = useI18n();
   const { data: systemAppConfigData, isLoading: isSystemConfigLoading } =
     useGetSystemAppConfig();
 
   if (!account || !job) {
-    return [{ title: 'Overview', href: `` }];
+    return [{ title: t('job.overview'), href: `` }];
   }
   const badgeText = getLabeledJobType(job.jobType, job.source?.options);
   const basePath = `/${account.name}/jobs/${job.id}`;
@@ -223,25 +237,25 @@ function useGetSidebarNavItems(job?: Job): SidebarNav[] {
   switch (badgeText) {
     case 'Sync Job': {
       const nav = [
-        { title: 'Overview', href: basePath },
-        { title: 'Source', href: `${basePath}/source` },
-        { title: 'Destinations', href: `${basePath}/destinations` },
+        { title: t('job.overview'), href: basePath },
+        { title: t('job.source'), href: `${basePath}/source` },
+        { title: t('job.destinations'), href: `${basePath}/destinations` },
       ];
       if (isJobSubsettable(job)) {
         nav.push({
-          title: 'Subsets',
+          title: t('job.subsets'),
           href: `${basePath}/subsets`,
         });
       }
       if (isMetricsServiceEnabled) {
         nav.push({
-          title: 'Usage',
+          title: t('job.usage'),
           href: `${basePath}/usage`,
         });
       }
       if (isJobHooksEnabled) {
         nav.push({
-          title: 'Hooks',
+          title: t('job.hooks'),
           href: `${basePath}/hooks`,
         });
       }
@@ -251,19 +265,19 @@ function useGetSidebarNavItems(job?: Job): SidebarNav[] {
 
     case 'Generate Job': {
       const nav = [
-        { title: 'Overview', href: basePath },
-        { title: 'Source', href: `${basePath}/source` },
-        { title: 'Destinations', href: `${basePath}/destinations` },
+        { title: t('job.overview'), href: basePath },
+        { title: t('job.source'), href: `${basePath}/source` },
+        { title: t('job.destinations'), href: `${basePath}/destinations` },
       ];
       if (isMetricsServiceEnabled) {
         nav.push({
-          title: 'Usage',
+          title: t('job.usage'),
           href: `${basePath}/usage`,
         });
       }
       if (isJobHooksEnabled) {
         nav.push({
-          title: 'Hooks',
+          title: t('job.hooks'),
           href: `${basePath}/hooks`,
         });
       }
@@ -272,19 +286,19 @@ function useGetSidebarNavItems(job?: Job): SidebarNav[] {
     }
     case 'AI Generate Job': {
       const nav = [
-        { title: 'Overview', href: basePath },
-        { title: 'Source', href: `${basePath}/source` },
-        { title: 'Destinations', href: `${basePath}/destinations` },
+        { title: t('job.overview'), href: basePath },
+        { title: t('job.source'), href: `${basePath}/source` },
+        { title: t('job.destinations'), href: `${basePath}/destinations` },
       ];
       if (isMetricsServiceEnabled) {
         nav.push({
-          title: 'Usage',
+          title: t('job.usage'),
           href: `${basePath}/usage`,
         });
       }
       if (isJobHooksEnabled) {
         nav.push({
-          title: 'Hooks',
+          title: t('job.hooks'),
           href: `${basePath}/hooks`,
         });
       }
@@ -292,19 +306,19 @@ function useGetSidebarNavItems(job?: Job): SidebarNav[] {
     }
     case 'PII Detect Job': {
       const nav = [
-        { title: 'Overview', href: basePath },
-        { title: 'Source', href: `${basePath}/source` },
+        { title: t('job.overview'), href: basePath },
+        { title: t('job.source'), href: `${basePath}/source` },
       ];
       if (isMetricsServiceEnabled) {
         nav.push({
-          title: 'Usage',
+          title: t('job.usage'),
           href: `${basePath}/usage`,
         });
       }
       return nav;
     }
     default: {
-      return [{ title: 'Overview', href: basePath }];
+      return [{ title: t('job.overview'), href: basePath }];
     }
   }
 }

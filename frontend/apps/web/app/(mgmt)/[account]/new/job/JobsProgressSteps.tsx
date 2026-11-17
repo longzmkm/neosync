@@ -1,4 +1,6 @@
 import Step from '@/components/progress-steps/Step';
+import { useI18n } from '@/components/providers/i18n-provider';
+import type { MessageKey } from '@/libs/i18n';
 import { ReactElement } from 'react';
 import { NewJobType } from './job-form-validations';
 
@@ -20,6 +22,13 @@ const PII_DETECTION_STEPS: JobProgressStep[] = ['define', 'connect', 'schema'];
 
 type JobProgressStep = 'define' | 'connect' | 'schema' | 'subset';
 
+const stepLabelKeys: Record<JobProgressStep, MessageKey> = {
+  define: 'step.define',
+  connect: 'step.connect',
+  schema: 'step.schema',
+  subset: 'step.subset',
+};
+
 interface Props {
   steps: JobProgressStep[];
   stepName: JobProgressStep;
@@ -27,6 +36,7 @@ interface Props {
 
 export default function JobsProgressSteps(props: Props): ReactElement {
   const { steps, stepName } = props;
+  const { t } = useI18n();
 
   const currentStepIndex = steps.indexOf(stepName);
 
@@ -40,6 +50,7 @@ export default function JobsProgressSteps(props: Props): ReactElement {
             <Step
               key={step}
               name={step}
+              label={t(stepLabelKeys[step])}
               isCompleted={isCompleted}
               isActive={isActive}
               isLastStep={index === steps.length - 1}

@@ -2,6 +2,7 @@
 import ConfirmationDialog from '@/components/ConfirmationDialog';
 import DeleteConfirmationDialog from '@/components/DeleteConfirmationDialog';
 import { useAccount } from '@/components/providers/account-provider';
+import { useI18n } from '@/components/providers/i18n-provider';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardTitle } from '@/components/ui/card';
@@ -41,6 +42,7 @@ interface Props {
 }
 
 export default function JobRecentRuns({ jobId }: Props): ReactElement {
+  const { t } = useI18n();
   const { account } = useAccount();
   const {
     data: recentRunsData,
@@ -138,7 +140,7 @@ export default function JobRecentRuns({ jobId }: Props): ReactElement {
       ) : (
         <div>
           <div className="flex flex-row items-center px-6">
-            <CardTitle className="py-6">Recent Job Runs</CardTitle>
+            <CardTitle className="py-6">{t('job.recentRuns')}</CardTitle>
             <Button
               className={
                 isValidating || jobRunsValidating ? 'animate-spin' : ''
@@ -154,11 +156,11 @@ export default function JobRecentRuns({ jobId }: Props): ReactElement {
           <Table>
             <TableHeader className="bg-gray-100 dark:bg-gray-800 ">
               <TableRow>
-                <TableHead className="px-6">Run Id</TableHead>
-                <TableHead className="px-6">Start At</TableHead>
-                <TableHead className="px-6">Completed At</TableHead>
-                <TableHead className="px-6">Status</TableHead>
-                <TableHead className="px-6">Action</TableHead>
+                <TableHead className="px-6">{t('table.runId')}</TableHead>
+                <TableHead className="px-6">{t('table.startAt')}</TableHead>
+                <TableHead className="px-6">{t('table.completedAt')}</TableHead>
+                <TableHead className="px-6">{t('table.status')}</TableHead>
+                <TableHead className="px-6">{t('table.action')}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

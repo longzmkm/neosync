@@ -1,6 +1,7 @@
 'use client';
 import ButtonText from '@/components/ButtonText';
 import Spinner from '@/components/Spinner';
+import { useI18n } from '@/components/providers/i18n-provider';
 import { Button } from '@/components/ui/button';
 import { getErrorMessage } from '@/util/util';
 import { useMutation } from '@connectrpc/connect-query';
@@ -20,17 +21,16 @@ export default function JobPauseButton({
   onNewStatus,
   jobId,
 }: Props): ReactElement {
+  const { t } = useI18n();
   const { mutateAsync: setJobPaused } = useMutation(JobService.method.pauseJob);
-  const [buttonText, setButtonText] = useState(
-    status === JobStatus.PAUSED ? 'Resume Job' : 'Pause Job'
-  );
+  const buttonText =
+    status === JobStatus.PAUSED ? t('job.resume') : t('job.pause');
   const [buttonIcon, setButtonIcon] = useState<JSX.Element>(
     status === JobStatus.PAUSED ? <PlayIcon /> : <PauseIcon />
   );
   const [isTrying, setIsTrying] = useState<boolean>(false);
 
   useEffect(() => {
-    setButtonText(status === JobStatus.PAUSED ? 'Resume Job' : 'Pause Job');
     if (isTrying) {
       setButtonIcon(<Spinner />);
     } else {
@@ -48,11 +48,11 @@ export default function JobPauseButton({
         id: jobId,
         pause: isPaused,
       });
-      toast.success(`Successfully ${isPaused ? 'paused' : 'unpaused'}  job!`);
+      toast.success(isPaused ? t('job.pausedOk') : t('job.unpausedOk'));
       onNewStatus(isPaused ? JobStatus.PAUSED : JobStatus.ENABLED);
     } catch (err) {
       console.error(err);
-      toast.error('Unable to update job paused status', {
+      toast.error(t('job.pauseFailed'), {
         description: getErrorMessage(err),
       });
     } finally {
