@@ -1,6 +1,7 @@
 import '@/app/globals.css';
 import { GoogleScriptProvider } from '@/components/providers/googleTag-provider';
 import { I18nProvider } from '@/components/providers/i18n-provider';
+import { DomI18n } from '@/components/providers/dom-i18n';
 import {
   PHProvider,
   PostHogPageview,
@@ -30,6 +31,7 @@ export default async function RootLayout({
       <head />
       <body className="min-h-screen bg-background font-sans antialiased overflow-scroll">
         <I18nProvider locale={locale}>
+          <DomI18n />
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
