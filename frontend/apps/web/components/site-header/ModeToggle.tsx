@@ -3,6 +3,7 @@
 import { MoonIcon, SunIcon } from '@radix-ui/react-icons';
 import { useTheme } from 'next-themes';
 
+import { useI18n } from '@/components/providers/i18n-provider';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -13,6 +14,7 @@ import {
 
 export function ModeToggle() {
   const { setTheme } = useTheme();
+  const { t } = useI18n();
 
   return (
     <DropdownMenu>
@@ -20,7 +22,7 @@ export function ModeToggle() {
         <Button variant="ghost" size="icon">
           <SunIcon className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <MoonIcon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-          <span className="sr-only">Toggle theme</span>
+          <span className="sr-only">{t('theme.toggle')}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -28,19 +30,19 @@ export function ModeToggle() {
           className="cursor-pointer"
           onClick={() => setTheme('light')}
         >
-          Light
+          {t('theme.light')}
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer"
           onClick={() => setTheme('dark')}
         >
-          Dark
+          {t('theme.dark')}
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer"
           onClick={() => setTheme('system')}
         >
-          System
+          {t('theme.system')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

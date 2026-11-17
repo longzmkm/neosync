@@ -8,6 +8,7 @@ import { ReactElement } from 'react';
 
 import { useGetSystemAppConfig } from '@/libs/hooks/useGetSystemAppConfig';
 import { cn } from '@/libs/utils';
+import { useI18n } from '@/components/providers/i18n-provider';
 import { getErrorMessage } from '@/util/util';
 import { CreateTeamFormValues } from '@/yup-validations/account-switcher';
 import { useMutation, useQuery } from '@connectrpc/connect-query';
@@ -119,6 +120,7 @@ function AccountSwitcherPopover(
     showCreateTeamDialog,
   } = props;
   const [open, setOpen] = useState(false);
+  const { t } = useI18n();
 
   const personalAccounts =
     accounts.filter((a) => a.type === UserAccountType.PERSONAL) ?? [];
@@ -135,7 +137,7 @@ function AccountSwitcherPopover(
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          aria-label="Select a team"
+          aria-label={t('team.selectLabel')}
           className="w-[200px] justify-between"
         >
           <Avatar className="mr-2 h-5 w-5">
@@ -151,11 +153,11 @@ function AccountSwitcherPopover(
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search account..." />
+          <CommandInput placeholder={t('team.searchAccount')} />
           <CommandList>
-            <CommandEmpty>No Account found.</CommandEmpty>
+            <CommandEmpty>{t('team.noAccount')}</CommandEmpty>
             {personalAccounts.length > 0 && (
-              <CommandGroup key="personal" heading="Personal">
+              <CommandGroup key="personal" heading={t('team.personal')}>
                 {personalAccounts.map((a) => (
                   <CommandItem
                     key={a.id}
@@ -185,7 +187,7 @@ function AccountSwitcherPopover(
               </CommandGroup>
             )}
             {teamAccounts.length > 0 && (
-              <CommandGroup key="team" heading="Team">
+              <CommandGroup key="team" heading={t('team.team')}>
                 {teamAccounts.map((a) => (
                   <CommandItem
                     key={a.id}
@@ -227,7 +229,7 @@ function AccountSwitcherPopover(
                     className="cursor-pointer"
                   >
                     <PlusCircledIcon className="mr-2 h-5 w-5" />
-                    Create Team
+                    {t('team.create')}
                   </CommandItem>
                 </DialogTrigger>
               </CommandGroup>
@@ -247,6 +249,7 @@ export function useGetOnCreateTeamSubmit(
   props: UseGetOnCreateTeamSubmitProps
 ): (values: CreateTeamFormValues) => Promise<void> {
   const { onDone = () => undefined } = props;
+  const { t } = useI18n();
 
   const { account, setAccount } = useAccount();
 
@@ -269,9 +272,7 @@ export function useGetOnCreateTeamSubmit(
       values.convertPersonalToTeam &&
       account?.type !== UserAccountType.PERSONAL
     ) {
-      toast.error(
-        'Selected account must be personal account to issue account conversion.'
-      );
+      toast.error(t('team.convertError'));
       return;
     }
     try {

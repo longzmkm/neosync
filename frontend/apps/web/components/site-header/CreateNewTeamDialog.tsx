@@ -3,6 +3,7 @@ import { ExternalLinkIcon } from '@radix-ui/react-icons';
 import { ReactElement, ReactNode } from 'react';
 
 import { cn } from '@/libs/utils';
+import { useI18n } from '@/components/providers/i18n-provider';
 import { CreateTeamFormValues } from '@/yup-validations/account-switcher';
 import Link from 'next/link';
 import { UseFormReturn } from 'react-hook-form';
@@ -50,16 +51,15 @@ export function CreateNewTeamDialog(props: Props): ReactElement {
     showConvertPersonalToTeamOption,
     form,
   } = props;
+  const { t } = useI18n();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger}
       <DialogContent className="flex flex-col gap-3">
         <DialogHeader>
-          <DialogTitle>Create team</DialogTitle>
-          <DialogDescription>
-            Create a new team account to collaborate with your co-workers.
-          </DialogDescription>
+          <DialogTitle>{t('team.createTitle')}</DialogTitle>
+          <DialogDescription>{t('team.createDesc')}</DialogDescription>
         </DialogHeader>
         <div className="space-y-2 py-2">
           <Form {...form}>
@@ -68,7 +68,7 @@ export function CreateNewTeamDialog(props: Props): ReactElement {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Team Name</FormLabel>
+                  <FormLabel>{t('team.nameLabel')}</FormLabel>
                   <FormControl>
                     <Input
                       autoCapitalize="off" // we don't allow capitals in team names
@@ -90,10 +90,8 @@ export function CreateNewTeamDialog(props: Props): ReactElement {
                     showConvertPersonalToTeamOption ? undefined : 'hidden'
                   )}
                 >
-                  <FormLabel>Personal Account Conversion</FormLabel>
-                  <FormDescription>
-                    Move all settings from personal to team account.
-                  </FormDescription>
+                  <FormLabel>{t('team.convertLabel')}</FormLabel>
+                  <FormDescription>{t('team.convertDesc')}</FormDescription>
                   <FormControl className="m-0">
                     <Switch
                       ref={field.ref}
@@ -113,7 +111,7 @@ export function CreateNewTeamDialog(props: Props): ReactElement {
         <DialogFooter>
           <div className="flex flex-row justify-between w-full">
             <Button variant="outline" onClick={() => onCancel()}>
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               type="submit"
@@ -122,7 +120,7 @@ export function CreateNewTeamDialog(props: Props): ReactElement {
               }
               disabled={!form.formState.isValid}
             >
-              Continue
+              {t('team.continue')}
             </Button>
           </div>
         </DialogFooter>
@@ -134,19 +132,18 @@ export function CreateNewTeamDialog(props: Props): ReactElement {
 interface ShowSubscriptionInfoProps {}
 function ShowSubscriptionInfo(props: ShowSubscriptionInfoProps): ReactElement {
   const {} = props;
+  const { t } = useI18n();
 
   return (
     <div>
       <div className="flex flex-row gap-2">
-        <p className="text-sm tracking-tight">
-          Continuing will start a monthly Team plan subscription.
-        </p>
+        <p className="text-sm tracking-tight">{t('team.subscriptionInfo')}</p>
         <Link
           href="https://neosync.dev/pricing"
           target="_blank"
           className="hover:underline inline-flex gap-1 flex-row items-center text-sm tracking-tight"
         >
-          Learn More
+          {t('team.learnMore')}
           <ExternalLinkIcon className="w-3 h-3" />
         </Link>
       </div>

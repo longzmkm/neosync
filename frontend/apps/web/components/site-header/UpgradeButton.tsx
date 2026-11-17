@@ -1,6 +1,7 @@
 import { ArrowUpIcon } from '@radix-ui/react-icons';
 import Link from 'next/link';
 import { ReactElement } from 'react';
+import { useI18n } from '../providers/i18n-provider';
 import { Button } from '../ui/button';
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 
 export default function UpgradeButton(props: Props): ReactElement {
   const { href, target, onClick } = props;
+  const { t } = useI18n();
 
   return (
     <div>
@@ -21,7 +23,7 @@ export default function UpgradeButton(props: Props): ReactElement {
           target={target}
           className="flex flex-row gap-2 items-center"
         >
-          <span>Upgrade</span>
+          <span>{t('upgrade.button')}</span>
           <ArrowUpIcon />
         </Link>
       </Button>

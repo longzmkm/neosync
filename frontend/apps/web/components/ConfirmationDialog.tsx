@@ -1,4 +1,5 @@
 import { cn } from '@/libs/utils';
+import { useI18n } from '@/components/providers/i18n-provider';
 import { AlertDialogTitle } from '@radix-ui/react-alert-dialog';
 import { ReactElement, ReactNode, useState, type JSX } from 'react';
 import ButtonText from './ButtonText';
@@ -28,12 +29,13 @@ export interface Props {
 }
 
 export default function ConfirmationDialog(props: Props): ReactElement {
+  const { t } = useI18n();
   const {
-    trigger = <Button type="button">Press to Confirm</Button>,
-    headerText = 'Are you sure?',
-    description = 'This will confirm the action that you selected.',
+    trigger,
+    headerText,
+    description,
     body,
-    buttonText = 'Confirm',
+    buttonText,
     buttonVariant,
     buttonIcon,
     containerClassName,
@@ -41,6 +43,13 @@ export default function ConfirmationDialog(props: Props): ReactElement {
   } = props;
   const [open, setOpen] = useState(false);
   const [isTrying, setIsTrying] = useState(false);
+
+  const resolvedTrigger = trigger ?? (
+    <Button type="button">{t('common.pressToConfirm')}</Button>
+  );
+  const resolvedHeaderText = headerText ?? t('common.areYouSure');
+  const resolvedDescription = description ?? t('common.confirmDescription');
+  const resolvedButtonText = buttonText ?? t('common.confirm');
 
   async function onClick(): Promise<void> {
     if (isTrying) {
@@ -56,17 +65,19 @@ export default function ConfirmationDialog(props: Props): ReactElement {
   }
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+      <AlertDialogTrigger asChild>{resolvedTrigger}</AlertDialogTrigger>
       <AlertDialogContent className={cn(containerClassName)}>
         <AlertDialogHeader className="gap-2">
-          <AlertDialogTitle className="text-xl">{headerText}</AlertDialogTitle>
+          <AlertDialogTitle className="text-xl">
+            {resolvedHeaderText}
+          </AlertDialogTitle>
           <AlertDialogDescription className="tracking-tight">
-            {description}
+            {resolvedDescription}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="pt-6">{body}</div>
         <AlertDialogFooter className="w-full flex sm:justify-between mt-4">
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
           <AlertDialogAction
             onClick={(e) => {
               e.preventDefault();
@@ -76,7 +87,7 @@ export default function ConfirmationDialog(props: Props): ReactElement {
           >
             <ButtonText
               leftIcon={isTrying ? <Spinner /> : buttonIcon}
-              text={buttonText}
+              text={resolvedButtonText}
             />
           </AlertDialogAction>
         </AlertDialogFooter>

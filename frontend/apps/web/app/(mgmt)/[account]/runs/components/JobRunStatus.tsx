@@ -7,6 +7,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { cn } from '@/libs/utils';
+import { useI18n } from '@/components/providers/i18n-provider';
 import { JobRunStatus as JobRunStatusEnum } from '@neosync/sdk';
 import {
   CheckIcon,
@@ -27,6 +28,7 @@ const sharedBadgeClassName = 'flex flex-row gap-3';
 
 export default function JobRunStatus(props: Props): ReactElement {
   const { status, containerClassName, badgeClassName } = props;
+  const { t } = useI18n();
 
   switch (status) {
     case JobRunStatusEnum.ERROR:
@@ -38,7 +40,7 @@ export default function JobRunStatus(props: Props): ReactElement {
           >
             <div className="flex flex-row items-center gap-1">
               <ExclamationTriangleIcon className="w-3 h-3" />
-              <p>Error</p>
+              <p>{t('runStatus.error')}</p>
             </div>
           </Badge>
         </div>
@@ -50,7 +52,7 @@ export default function JobRunStatus(props: Props): ReactElement {
             variant="success"
             className={cn(sharedBadgeClassName, badgeClassName)}
           >
-            <CheckIcon className="w-3 h-3" /> <p>Complete</p>
+            <CheckIcon className="w-3 h-3" /> <p>{t('runStatus.complete')}</p>
           </Badge>
         </div>
       );
@@ -61,7 +63,8 @@ export default function JobRunStatus(props: Props): ReactElement {
             variant="destructive"
             className={cn(sharedBadgeClassName, badgeClassName)}
           >
-            <ExclamationTriangleIcon className="w-3 h-3" /> <p>Failed</p>
+            <ExclamationTriangleIcon className="w-3 h-3" />{' '}
+            <p>{t('runStatus.failed')}</p>
           </Badge>
         </div>
       );
@@ -75,7 +78,7 @@ export default function JobRunStatus(props: Props): ReactElement {
               badgeClassName
             )}
           >
-            <Spinner className="w-3 h-3" /> <p>Running</p>
+            <Spinner className="w-3 h-3" /> <p>{t('runStatus.running')}</p>
           </Badge>
         </div>
       );
@@ -89,7 +92,7 @@ export default function JobRunStatus(props: Props): ReactElement {
               badgeClassName
             )}
           >
-            <Spinner className="w-3 h-3" /> <p>Pending</p>
+            <Spinner className="w-3 h-3" /> <p>{t('runStatus.pending')}</p>
           </Badge>
         </div>
       );
@@ -103,7 +106,8 @@ export default function JobRunStatus(props: Props): ReactElement {
               badgeClassName
             )}
           >
-            <ExclamationTriangleIcon className="w-3 h-3" /> <p>Terminated</p>
+            <ExclamationTriangleIcon className="w-3 h-3" />{' '}
+            <p>{t('runStatus.terminated')}</p>
           </Badge>
         </div>
       );
@@ -117,7 +121,8 @@ export default function JobRunStatus(props: Props): ReactElement {
               badgeClassName
             )}
           >
-            <ExclamationTriangleIcon className="w-3 h-3" /> <p>Canceled</p>
+            <ExclamationTriangleIcon className="w-3 h-3" />{' '}
+            <p>{t('runStatus.canceled')}</p>
           </Badge>
         </div>
       );
@@ -131,7 +136,7 @@ export default function JobRunStatus(props: Props): ReactElement {
               badgeClassName
             )}
           >
-            <ClockIcon className="w-3 h-3" /> <p>Timed Out</p>
+            <ClockIcon className="w-3 h-3" /> <p>{t('runStatus.timedOut')}</p>
           </Badge>
         </div>
       );
@@ -146,15 +151,12 @@ export default function JobRunStatus(props: Props): ReactElement {
                   className={cn(sharedBadgeClassName, badgeClassName)}
                 >
                   <QuestionMarkCircledIcon className="w-3 h-3" />
-                  <p>Unknown</p>
+                  <p>{t('runStatus.unknown')}</p>
                 </Badge>
               </div>
             </TooltipTrigger>
             <TooltipContent>
-              <p>
-                This run is un-started, archived by the system, or has been
-                deleted.
-              </p>
+              <p>{t('runStatus.unknownDesc')}</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
