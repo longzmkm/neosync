@@ -1330,6 +1330,14 @@ func wrapIdempotentIndex(
 	}
 	procedureName := fmt.Sprintf("NeosyncAddIndex_%s", hashInput(hashParams...))[:64]
 	indexStmt := createIndexStmt(schema, table, idxInfo, columnInput)
+	if containsMultiValuedIndexCast(idxInfo.columns) {
+		// MySQL does not allow CAST(.. AS .. ARRAY) to be used directly inside
+		// stored routines, so the statement is executed through dynamic SQL.
+		indexStmt = fmt.Sprintf(
+			"SET @neosync_index_sql = '%s';\n        PREPARE neosync_index_stmt FROM @neosync_index_sql;\n        EXECUTE neosync_index_stmt;\n        DEALLOCATE PREPARE neosync_index_stmt;",
+			strings.ReplaceAll(indexStmt, "'", "''"),
+		)
+	}
 	stmt := fmt.Sprintf(`
 CREATE PROCEDURE %[1]s()
 BEGIN
@@ -1350,6 +1358,17 @@ CALL %[1]s();
 DROP PROCEDURE %[1]s;
 `, procedureName, schema, table, idxInfo.indexName, indexStmt)
 	return strings.TrimSpace(stmt)
+}
+
+var mysqlMultiValuedIndexCastPattern = regexp.MustCompile(`(?i)as\s+[a-z0-9_]+\s+array`)
+
+func containsMultiValuedIndexCast(columns []string) bool {
+	for _, col := range columns {
+		if mysqlMultiValuedIndexCastPattern.MatchString(col) {
+			return true
+		}
+	}
+	return false
 }
 
 func wrapIdempotentFunction(

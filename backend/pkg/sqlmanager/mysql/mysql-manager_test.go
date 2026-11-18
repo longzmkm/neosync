@@ -46,6 +46,29 @@ func Test_EscapeMysqlDefaultColumn(t *testing.T) {
 	require.Equal(t, "(CURRENT_TIMESTAMP)", actual)
 }
 
+func Test_WrapIdempotentIndex_MultiValuedCast(t *testing.T) {
+	idx := &indexInfo{
+		indexName: "idx_product_viewer",
+		indexType: "BTREE",
+		columns:   []string{"(cast(`product_viewer_id` as unsigned array))"},
+	}
+	stmt := wrapIdempotentIndex("lbp_center_test", "product_spu_address_book", idx)
+	require.Contains(t, stmt, "PREPARE neosync_index_stmt FROM @neosync_index_sql")
+	require.Contains(t, stmt, "cast(`product_viewer_id` as unsigned array)")
+	require.NotContains(t, stmt, "IF index_exists = 0 THEN\n        ALTER TABLE")
+}
+
+func Test_WrapIdempotentIndex_Plain(t *testing.T) {
+	idx := &indexInfo{
+		indexName: "idx_plain",
+		indexType: "BTREE",
+		columns:   []string{"sku_id"},
+	}
+	stmt := wrapIdempotentIndex("s", "t", idx)
+	require.NotContains(t, stmt, "PREPARE")
+	require.Contains(t, stmt, "ADD INDEX `idx_plain` (`sku_id`)")
+}
+
 func Test_BuildMysqlTruncateStatement(t *testing.T) {
 	actual, err := BuildMysqlTruncateStatement("public", "users")
 	require.NoError(t, err)
