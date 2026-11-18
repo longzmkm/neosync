@@ -272,6 +272,39 @@ func (s *pooledInsertOutput) WriteBatch(ctx context.Context, batch service.Messa
 		return nil
 	}
 
+	maxRowsPerInsert := len(rows)
+	if s.driver == sqlmanager_shared.MysqlDriver {
+		if limit := mysqlMaxRowsPerInsert(len(rows[0])); limit > 0 && limit < maxRowsPerInsert {
+			maxRowsPerInsert = limit
+		}
+	}
+	for start := 0; start < len(rows); start += maxRowsPerInsert {
+		end := start + maxRowsPerInsert
+		if end > len(rows) {
+			end = len(rows)
+		}
+		if err := s.writeRows(ctx, db, rows[start:end]); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// mysqlMaxRowsPerInsert returns the maximum number of rows that can be inserted
+// in a single statement given the placeholder limit enforced by MySQL.
+func mysqlMaxRowsPerInsert(columnCount int) int {
+	const maxPlaceholders = 65535
+	if columnCount <= 0 {
+		return 0
+	}
+	return maxPlaceholders / columnCount
+}
+
+func (s *pooledInsertOutput) writeRows(
+	ctx context.Context,
+	db mysql_queries.DBTX,
+	rows []map[string]any,
+) error {
 	// postgres upsert for tables with deferrable constraints
 	// fixes ON CONFLICT does not support deferrable unique constraints/exclusion constraints as arbiters (SQLSTATE 55000)
 	if s.onConflictDoUpdate && s.hasDeferrableConstraint && s.driver == sqlmanager_shared.PostgresDriver {

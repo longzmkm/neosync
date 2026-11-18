@@ -10,6 +10,9 @@ import (
 )
 
 func Test_SqlInsertOutputEmptyShutdown(t *testing.T) {
+	require.Equal(t, 65535, mysqlMaxRowsPerInsert(1))
+	require.Equal(t, 1008, mysqlMaxRowsPerInsert(65))
+	require.Equal(t, 0, mysqlMaxRowsPerInsert(0))
 	conf := `
 connection_id: 123
 schema: bar
