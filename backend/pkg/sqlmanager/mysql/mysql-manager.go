@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"regexp"
 	"strings"
 	"sync"
 
@@ -1489,7 +1490,10 @@ func EscapeMysqlDefaultColumn(
 		return defaultColumnValue, nil
 	}
 	if *defaultColumnType == columnDefaultString {
-		return fmt.Sprintf("'%s'", defaultColumnValue), nil
+		if isMysqlUnquotedDefault(defaultColumnValue) {
+			return defaultColumnValue, nil
+		}
+		return fmt.Sprintf("'%s'", strings.ReplaceAll(defaultColumnValue, "'", "''")), nil
 	}
 	if *defaultColumnType == columnDefaultDefault {
 		return fmt.Sprintf("(%s)", defaultColumnValue), nil
@@ -1502,6 +1506,16 @@ func EscapeMysqlDefaultColumn(
 			*defaultColumnType,
 			defaultColumnTypes,
 		)
+}
+
+// mysqlUnquotedDefaultPattern matches default values that must not be wrapped in
+// single quotes, such as bit/hex literals and date/time functions.
+var mysqlUnquotedDefaultPattern = regexp.MustCompile(
+	`(?i)^(b'[01]+'|0b[01]+|x'[0-9a-f]*'|0x[0-9a-f]+|current_timestamp(\(\d*\))?|now\(\)|localtime(stamp)?(\(\d*\))?|null)$`,
+)
+
+func isMysqlUnquotedDefault(value string) bool {
+	return mysqlUnquotedDefaultPattern.MatchString(strings.TrimSpace(value))
 }
 
 func GetMysqlColumnOverrideAndResetProperties(
